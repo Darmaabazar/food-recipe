@@ -1,1 +1,0 @@
-(self.webpackChunkfood_recipe=self.webpackChunkfood_recipe||[]).push([[524],{654:()=>{}},e=>{e(e.s=654)}]);
