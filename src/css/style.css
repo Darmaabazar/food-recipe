@@ -144,12 +144,10 @@ body {
 .loader {
   margin: 5rem auto;
   text-align: center; }
-  .loader svg {
-    height: 5.5rem;
-    width: 5.5rem;
-    fill: #F59A83;
-    transform-origin: 44% 50%;
-    animation: rotate 1.5s infinite linear; }
+  .loader i {
+    font-size: 5.5rem;
+    color: #F59A83;
+  }
 
 @keyframes rotate {
   0% {

@@ -1,20 +1,32 @@
-require("@babel/polyfill");
+require(`@babel/polyfill`);
 import "../css/style.css";
-import axios from "axios";
+import Search from "./model/search";
+import { elements, renderLoader, clearLoader } from "./view/base";
+import * as searchView from "./view/searchView";
 
 
-async function doSearch(search) {
-    try{
+const state = {};
 
-        let response = await axios.get(`https://forkify-api.herokuapp.com/api/search?q=${search}`);
-        let recipes = response.data.recipes;
-        console.log(recipes);
-    
-        response = await axios.get(`https://forkify-api.herokuapp.com/api/get?rId=${recipes[1].recipe_id}`);
-        console.log(response.data.recipe.ingredients);
-    } catch(error){
-        alert(error);
+const controlSearch = async() => {
+    const query = searchView.getInput();
+
+    if(query) {
+        state.search = new Search(query);
+
+        searchView.clearInputQuery();
+        searchView.clearFieldResult();
+        renderLoader(elements.searchResultDiv);
+
+        await state.search.doSearch();
+
+        clearLoader();
+        
+        if(state.search.result === undefined) console.log("Хайлтаар илэрцгүй...");
+        else searchView.renderRecipes(state.search.result);
     }
 }
 
-doSearch("pizza");
+elements.searchForm.addEventListener("submit", e => {
+    e.preventDefault();
+    controlSearch();
+});
