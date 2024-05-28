@@ -9,8 +9,9 @@ export default class Search{
     async doSearch() {
         try{
 
-            let result = await axios(`https://forkify-api.herokuapp.com/api/v2/recipes?search=${this.query}&key=00b34bf3-6154-4f34-b8ab-d85798c2baf6`);
-            this.result = result.data.data.recipes;
+            let result = await axios(`https://forkify-api.herokuapp.com/api/search?q=${this.query}`);
+            this.result = result.data.recipes;
+            
             return this.result;
 
         } catch(error){
