@@ -1,6 +1,7 @@
 require(`@babel/polyfill`);
 import "../css/style.css";
 import Search from "./model/search";
+import Recipe from "./model/recipe";
 import { elements, renderLoader, clearLoader } from "./view/base";
 import * as searchView from "./view/searchView";
 
@@ -40,3 +41,20 @@ elements.pageButtons.addEventListener("click", e => {
         searchView.renderRecipes(state.search.result, goToPage);
     }
 });
+
+
+
+const controlRecipe = async() => {
+    const id = window.location.hash.replace('#', '');
+    
+    state.recipe = new Recipe(id);
+
+    await state.recipe.getRecipe();
+
+    state.recipe.calcTime();
+    state.recipe.calcServings();
+
+    console.log(state.recipe);
+};
+
+window.addEventListener("hashchange", () => {controlRecipe();});
