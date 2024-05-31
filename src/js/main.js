@@ -4,6 +4,7 @@ import Search from "./model/search";
 import Recipe from "./model/recipe";
 import { elements, renderLoader, clearLoader } from "./view/base";
 import * as searchView from "./view/searchView";
+import {renderRecipe, clearRecipe} from "./view/recipeView";
 
 
 const state = {};
@@ -49,12 +50,16 @@ const controlRecipe = async() => {
     
     state.recipe = new Recipe(id);
 
+    clearRecipe();
+    renderLoader(elements.recipeDiv);
+
     await state.recipe.getRecipe();
 
+    clearLoader();
     state.recipe.calcTime();
     state.recipe.calcServings();
 
-    console.log(state.recipe);
+    renderRecipe(state.recipe);
 };
 
-window.addEventListener("hashchange", () => {controlRecipe();});
+window.addEventListener("hashchange", controlRecipe);
