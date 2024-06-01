@@ -13,6 +13,15 @@ const renderIngredient = ingredient => `
     </li>
 `;
 
+export const highlightSelectedRecipe = id => {
+    const arr = Array.from(document.querySelectorAll(`.results__link`));
+    arr.forEach(el => el.classList.remove(`results__link--active`));
+
+
+    const domObj = document.querySelector(`a[href*="${id}"]`);
+    if (domObj) domObj.classList.add('results__link--active');
+};
+
 export const clearRecipe = () => {
     elements.recipeDiv.innerHTML = '';
 };
@@ -20,7 +29,7 @@ export const clearRecipe = () => {
 export const renderRecipe = (recipe) => {
     const recipeHtml = `
     <figure class="recipe__fig">
-        <img src="${recipe.image_url}" alt="Tomato" class="recipe__img">
+        <img src="${recipe.image_url}" alt="${recipe.image_url}" class="recipe__img">
         <h1 class="recipe__title">
             <span>${recipe.title}</span>
         </h1>

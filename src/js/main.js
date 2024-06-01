@@ -2,9 +2,11 @@ require(`@babel/polyfill`);
 import "../css/style.css";
 import Search from "./model/search";
 import Recipe from "./model/recipe";
+import List from "./model/list";
 import { elements, renderLoader, clearLoader } from "./view/base";
 import * as searchView from "./view/searchView";
-import {renderRecipe, clearRecipe} from "./view/recipeView";
+import * as listView from "./view/listView";
+import {renderRecipe, clearRecipe, highlightSelectedRecipe} from "./view/recipeView";
 
 
 const state = {};
@@ -47,19 +49,48 @@ elements.pageButtons.addEventListener("click", e => {
 
 const controlRecipe = async() => {
     const id = window.location.hash.replace('#', '');
+
+    if(id) {
+        state.recipe = new Recipe(id);
     
-    state.recipe = new Recipe(id);
+        clearRecipe();
+        renderLoader(elements.recipeDiv);
+        
+        highlightSelectedRecipe(id);
+        await state.recipe.getRecipe();
 
-    clearRecipe();
-    renderLoader(elements.recipeDiv);
+        clearLoader();
+        state.recipe.calcTime();
+        state.recipe.calcServings();
 
-    await state.recipe.getRecipe();
+        renderRecipe(state.recipe);
+    }
 
-    clearLoader();
-    state.recipe.calcTime();
-    state.recipe.calcServings();
-
-    renderRecipe(state.recipe);
+    
 };
 
-window.addEventListener("hashchange", controlRecipe);
+// window.addEventListener("hashchange", controlRecipe);
+// window.addEventListener("load", controlRecipe);
+
+["hashchange", "load"].forEach(e => window.addEventListener(e, controlRecipe));
+
+
+
+const controlList = async() => {
+    state.list = new List();
+
+    listView.clearList();
+    
+    state.recipe.ingredients.forEach(e => {
+        state.list.addItem(e);
+        listView.renderList(e);
+    });
+    
+};
+
+
+elements.recipeDiv.addEventListener("click", e => {
+    if(e.target.matches('.recipe__btn, .recipe__btn *')) {
+        controlList();
+    }
+});
